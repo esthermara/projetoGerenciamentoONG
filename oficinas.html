@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficinas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px 40px 0 40px;
+            background-color: #262626;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px 50px 50px 50px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form input,
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        form input[type="submit"] {
+            background-color: #262626;
+            color: rgb(172, 131, 238);
+            border: none;
+            cursor: pointer;
+            width: auto;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: white;
+            color: #bd84c9;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        #oficinasTableWrapper {
+            max-height: 100px;
+            /* Define a altura máxima desejada */
+            overflow-y: auto;
+        }
+
+        #botaoImagemContainer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #botaoImagem {
+            background: white;
+            border-radius: 20%;
+            cursor: pointer;
+        }
+
+        #botaoImagem img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Oficinas</h1>
+
+        <!-- Formulário para adicionar oficinas -->
+        <form id="oficinasForm">
+            <label for="oficina">Oficina:</label>
+            <input type="text" id="oficina" name="oficina" required><br>
+
+            <label for="diaSemana">Dia da Semana:</label>
+            <input type="text" id="diaSemana" name="diaSemana" required><br>
+
+            <label for="horario">Horário:</label>
+            <input type="text" id="horario" name="horario" required><br>
+
+            <label for="professora">Professora:</label>
+            <input type="text" id="professora" name="professora" required><br>
+
+            <input type="submit" value="Adicionar Oficina">
+        </form>
+
+        <!-- Barra de pesquisa -->
+        <div>
+            <label for="search">Pesquisar:</label>
+            <input type="text" id="search" name="search">
+            <button id="searchButton">Buscar</button>
+        </div>
+
+        <!-- Tabela de oficinas -->
+        <div id="oficinasTableWrapper">
+            <table id="oficinasTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Oficina</th>
+                        <th>Dia da Semana</th>
+                        <th>Horário</th>
+                        <th>Professora</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="botaoImagemContainer">
+        <button id="botaoImagem">
+            <img src="imagemMenu.png" alt="Botão de Imagem" width="50" height="50">
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('oficinasForm');
+            const tableBody = document.querySelector('#oficinasTable tbody');
+            const searchButton = document.getElementById('searchButton');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const oficina = document.getElementById('oficina').value;
+                const diaSemana = document.getElementById('diaSemana').value;
+                const horario = document.getElementById('horario').value;
+                const professora = document.getElementById('professora').value;
+
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+            <td>${tableBody.children.length + 1}</td>
+            <td>${oficina}</td>
+            <td>${diaSemana}</td>
+            <td>${horario}</td>
+            <td>${professora}</td>
+        `;
+
+                tableBody.appendChild(newRow);
+
+                form.reset();
+            });
+
+            searchButton.addEventListener('click', function () {
+                const searchTerm = document.getElementById('search').value.toLowerCase();
+
+                tableBody.querySelectorAll('tr').forEach(function (row) {
+                    let found = false;
+                    row.querySelectorAll('td').forEach(function (cell) {
+                        const textContent = cell.textContent.toLowerCase();
+                        if (textContent.includes(searchTerm)) {
+                            found = true;
+                        }
+                    });
+                    row.style.display = found ? '' : 'none';
+                });
+            });
+        });
+        // Voltar a página menu //
+        document.getElementById('botaoImagem').onclick = function () {
+            window.location.href = 'menu.html';
+        };
+    </script>
+</body>
+
+</html>

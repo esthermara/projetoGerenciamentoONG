@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Associados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px 20px 0 20px;
+            background-color: #262626;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px 50px 50px 50px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form input,
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        form input[type="submit"] {
+            background-color: #262626;
+            color: rgb(172, 131, 238);
+            border: none;
+            cursor: pointer;
+            width: auto;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: white;
+            color: #bd84c9;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Estilo para a barra de pesquisa */
+        #searchContainer {
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        #search {
+            flex: 1;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        #searchButton {
+            margin-left: 10px;
+            padding: 8px 16px;
+            background-color: #262626;
+            color: rgb(172, 131, 238);
+            border: none;
+            cursor: pointer;
+        }
+
+        #searchButton:hover {
+            background-color: white;
+            color: #bd84c9;
+        }
+
+        #associadoTableWrapper {
+            max-height: 100px;
+            /* Define a altura máxima desejada */
+            overflow-y: auto;
+        }
+
+        #botaoImagemContainer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #botaoImagem {
+            background: white;
+            border-radius: 20%;
+            cursor: pointer;
+        }
+
+        #botaoImagem img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Associados</h1>
+
+        <!-- Formulário para adicionar associados -->
+        <form id="associadoForm">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required><br>
+
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required><br>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" required><br>
+
+            <input type="submit" value="Adicionar Associado">
+        </form>
+
+        <!-- Barra de pesquisa -->
+        <div id="searchContainer">
+            <label for="search">Pesquisar:</label>
+            <input type="text" id="search" name="search">
+            <button id="searchButton">Buscar</button>
+        </div>
+
+        <!-- Tabela de associados -->
+        <div id="associadoTableWrapper">
+            <table id="associadoTable">
+                <thead>
+                    <tr>
+                        <th>Nome Completo</th>
+                        <th>Endereço</th>
+                        <th>E-mail</th>
+                        <th>Telefone</th>
+                        <th>Data de Associação</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="botaoImagemContainer">
+        <button id="botaoImagem">
+            <img src="imagemMenu.png" alt="Botão de Imagem" width="50" height="50">
+        </button>
+    </div>
+
+    <script>
+        document.getElementById('associadoForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var nome = document.getElementById('nome').value;
+            var endereco = document.getElementById('endereco').value;
+            var email = document.getElementById('email').value;
+            var telefone = document.getElementById('telefone').value;
+
+            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+
+            cell1.innerHTML = nome;
+            cell2.innerHTML = endereco;
+            cell3.innerHTML = email;
+            cell4.innerHTML = telefone;
+
+            var data = new Date();
+            var dataFormatada = data.toLocaleDateString('pt-BR');
+
+            cell5.innerHTML = dataFormatada;
+        });
+
+        document.getElementById('searchButton').addEventListener('click', function () {
+            var searchTerm = document.getElementById('search').value.toLowerCase();
+
+            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
+
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var found = false;
+
+                for (var j = 0, cell; cell = row.cells[j]; j++) {
+                    var textContent = cell.textContent.toLowerCase();
+                    if (textContent.includes(searchTerm)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                row.style.display = found ? '' : 'none';
+            }
+        });
+        // Voltar a página menu //
+        document.getElementById('botaoImagem').onclick = function () {
+            window.location.href = 'menu.html';
+        };
+    </script>
+</body>
+
+</html>
