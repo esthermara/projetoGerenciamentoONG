@@ -8,22 +8,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin:  50px 50px 0 50px;
-            background-color: #262626;
+            margin: 50px 50px 0 50px;
+            background-color: white;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding:  15px 50px 50px 50px;
-            border: 1px solid #ccc;
+            padding: 50px 50px 50px 50px;
+            border: 2px solid #262626;
             background-color: white;
             border-radius: 20px;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin: -65px 0 0 50px;
+            background-color: white;
+            border: 2px solid #262626;
+            color: #262626;
+            font-size: 20px;
+            width: 100px;
+            border-radius: 20px;
+            position: absolute;
         }
 
         form input,
@@ -45,6 +52,7 @@
         form input[type="submit"]:hover {
             background-color: white;
             color: #bd84c9;
+            border: 1px solid #262626;
         }
 
         table {
@@ -90,6 +98,7 @@
         #searchButton:hover {
             background-color: white;
             color: #bd84c9;
+            border: 1px solid #262626;
         }
 
         #estoqueTableWrapper {
@@ -97,6 +106,7 @@
             /* Define a altura máxima desejada */
             overflow-y: auto;
         }
+
         #botaoImagemContainer {
             position: absolute;
             top: 10px;
@@ -104,14 +114,15 @@
         }
 
         #botaoImagem {
+            border: none;
+            background: none;
             cursor: pointer;
-            border-radius: 30%;
-            background: white;
         }
 
         #botaoImagem img {
             width: 50px;
             height: 50px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -161,7 +172,7 @@
     </div>
     <div id="botaoImagemContainer">
         <button id="botaoImagem">
-            <img src="imagemMenu.png" alt="Botão de Imagem" width="50" height="50">
+            <img src="image/imagemMenu.png" alt="Botão de Imagem">
         </button>
     </div>
 

@@ -9,21 +9,28 @@
         body {
             font-family: Arial, sans-serif;
             margin: 40px 40px 0 40px;
-            background-color: #262626;
+            background-color: white;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 15px 50px 50px 50px;
-            border: 1px solid #ccc;
+            padding: 50px 50px 50px 50px;
+            border: 2px solid #262626;
             background-color: white;
             border-radius: 20px;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin: -65px 0 0 50px;
+            background-color: white;
+            border: 2px solid #262626;
+            color: #262626;
+            font-size: 20px;
+            width: 100px;
+            border-radius: 20px;
+            position: absolute;
         }
 
         form input,
@@ -45,6 +52,7 @@
         form input[type="submit"]:hover {
             background-color: white;
             color: #bd84c9;
+            border: 1px solid #262626;
         }
 
         table {
@@ -64,6 +72,33 @@
             padding: 8px;
             text-align: left;
         }
+         /* Estilo para a barra de pesquisa */
+         #searchContainer {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        #search {
+            flex: 1;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        #searchButton {
+            margin-left: 10px;
+            padding: 8px 16px;
+            background-color: #262626;
+            color: rgb(172, 131, 238);
+            border: none;
+            cursor: pointer;
+        }
+
+        #searchButton:hover {
+            background-color: white;
+            color: #bd84c9;
+            border: 1px solid #262626;
+        }
 
         #oficinasTableWrapper {
             max-height: 100px;
@@ -78,14 +113,15 @@
         }
 
         #botaoImagem {
-            background: white;
-            border-radius: 20%;
+            border: none;
+            background: none;
             cursor: pointer;
         }
 
         #botaoImagem img {
             width: 50px;
             height: 50px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -105,14 +141,14 @@
             <label for="horario">Horário:</label>
             <input type="text" id="horario" name="horario" required><br>
 
-            <label for="professora">Professora:</label>
-            <input type="text" id="professora" name="professora" required><br>
+            <label for="professora">Professor(a):</label>
+            <input type="text" id="professor" name="professor" required><br>
 
             <input type="submit" value="Adicionar Oficina">
         </form>
 
         <!-- Barra de pesquisa -->
-        <div>
+        <div id="searchContainer">
             <label for="search">Pesquisar:</label>
             <input type="text" id="search" name="search">
             <button id="searchButton">Buscar</button>
@@ -127,7 +163,7 @@
                         <th>Oficina</th>
                         <th>Dia da Semana</th>
                         <th>Horário</th>
-                        <th>Professora</th>
+                        <th>Professor(a)</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -136,7 +172,7 @@
     </div>
     <div id="botaoImagemContainer">
         <button id="botaoImagem">
-            <img src="imagemMenu.png" alt="Botão de Imagem" width="50" height="50">
+            <img src="image/imagemMenu.png" alt="Botão de Imagem">
         </button>
     </div>
 
@@ -152,7 +188,7 @@
                 const oficina = document.getElementById('oficina').value;
                 const diaSemana = document.getElementById('diaSemana').value;
                 const horario = document.getElementById('horario').value;
-                const professora = document.getElementById('professora').value;
+                const professora = document.getElementById('professor').value;
 
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
@@ -160,7 +196,7 @@
             <td>${oficina}</td>
             <td>${diaSemana}</td>
             <td>${horario}</td>
-            <td>${professora}</td>
+            <td>${professor}</td>
         `;
 
                 tableBody.appendChild(newRow);

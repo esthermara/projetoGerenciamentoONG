@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Moderno</title>
+    <title>Menu</title>
     <style>
-        body {
-            font-family: nunito sans-serif;
+          body {
+            font-family: Arial, sans-serif;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #262626;
+            background-color: white;
         }
 
         .menu-container {
             max-width: 600px;
-            border-radius: 20px;
             overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #262626;
+            border-radius: 20px;
         }
 
         nav {
-            background-color: white;
+            text-align: center;
+            margin-top: 50px; 
         }
 
         ul {
             list-style-type: none;
             margin: 0;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
         }
 
         li {
             display: inline-block;
-            margin: 0;
+            margin: 0 10px;
             position: relative;
         }
 
@@ -61,8 +66,8 @@
         ul ul {
             position: absolute;
             background-color: #333;
-            min-width: 140px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            min-width: 50px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
             opacity: 0;
             visibility: hidden;
@@ -72,7 +77,7 @@
 
         ul ul li {
             display: block;
-            text-align: left;
+            text-align: center;
             margin: 0;
             padding: 0;
         }
@@ -81,10 +86,59 @@
             font-size: 16px;
             padding: 10px 20px;
         }
+
+        #botaoImagemContainer {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+        }
+
+        #botaoImagem {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        #botaoImagem img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        #imagensmenu {
+            position: absolute;
+            top: 220px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50px;
+            background: #262626;
+            border: 2px solid white;
+            
+        }
+
+        #imagensmenu img {
+            width: 80px;
+            height: 80px;
+            margin: 0 10px;
+        }
     </style>
 </head>
+
 <body>
+    <div id="botaoImagemContainer">
+        <button id="botaoImagem">
+            <img src="image/imagemLogin.png" alt="Botão de Imagem">
+        </button>
+    </div>
     <div class="menu-container">
+        <div id="imagensmenu">
+            <img src="image/imagemAssociados.PNG" alt="Botão de Imagem">
+            <img src="image/imagemOficinas.PNG" alt="Botão de Imagem">
+            <img src="image/imagemEstoque.PNG" alt="Botão de Imagem">
+        </div>
         <nav>
             <ul>
                 <li><a href="associados.html">ASSOCIADOS</a></li>
@@ -93,5 +147,12 @@
             </ul>
         </nav>
     </div>
+    <script>
+        // Voltar a página menu //
+        document.getElementById('botaoImagem').onclick = function () {
+            window.location.href = 'index.html';
+        };
+    </script>
 </body>
+
 </html>

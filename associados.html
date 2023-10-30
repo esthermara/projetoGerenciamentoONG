@@ -8,22 +8,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px 20px 0 20px;
-            background-color: #262626;
+            margin: 40px 40px 0 40px;
+            background-color: white;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 15px 50px 50px 50px;
-            border: 1px solid #ccc;
+            padding: 50px 50px 50px 50px;
+            border: 2px solid #262626;
             background-color: white;
             border-radius: 20px;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin:-65px 0 0 60px;
+            background-color: white;
+            border: 2px solid #262626;
+            color: #262626;
+            font-size: 20px;
+            width: 200px;
+            border-radius: 20px;
+            position: absolute;
         }
 
         form input,
@@ -45,6 +52,7 @@
         form input[type="submit"]:hover {
             background-color: white;
             color: #bd84c9;
+            border: 1px solid #262626;
         }
 
         table {
@@ -89,6 +97,7 @@
         #searchButton:hover {
             background-color: white;
             color: #bd84c9;
+            border: 1px solid #262626;
         }
 
         #associadoTableWrapper {
@@ -104,14 +113,16 @@
         }
 
         #botaoImagem {
-            background: white;
-            border-radius: 20%;
+            border: none;
+            background: none;
             cursor: pointer;
+           
         }
 
         #botaoImagem img {
             width: 50px;
             height: 50px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -119,7 +130,6 @@
 <body>
     <div class="container">
         <h1>Associados</h1>
-
         <!-- Formulário para adicionar associados -->
         <form id="associadoForm">
             <label for="nome">Nome Completo:</label>
@@ -162,7 +172,7 @@
     </div>
     <div id="botaoImagemContainer">
         <button id="botaoImagem">
-            <img src="imagemMenu.png" alt="Botão de Imagem" width="50" height="50">
+            <img src="image/imagemMenu.png" alt="Botão de Imagem">
         </button>
     </div>
 
