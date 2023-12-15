@@ -9,7 +9,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 40px 40px 0 40px;
-            background-color: white;
+            background-color: #262626;
         }
 
         .container {
@@ -17,18 +17,20 @@
             margin: 0 auto;
             padding: 50px 50px 50px 50px;
             border: 2px solid #262626;
-            background-color: white;
+            background-color: #4d4b4bee;
             border-radius: 20px;
+            color: white;
+            font-weight: bold;
         }
 
         h1 {
             text-align: center;
-            margin:-65px 0 0 60px;
-            background-color: white;
+            margin: -65px 0 0 60px;
+            background-color: #4d4b4b;
             border: 2px solid #262626;
             color: #262626;
             font-size: 20px;
-            width: 200px;
+            width: 150px;
             border-radius: 20px;
             position: absolute;
         }
@@ -43,7 +45,7 @@
 
         form input[type="submit"] {
             background-color: #262626;
-            color: rgb(172, 131, 238);
+            color: rgb(132, 221, 137);
             border: none;
             cursor: pointer;
             width: auto;
@@ -51,7 +53,7 @@
 
         form input[type="submit"]:hover {
             background-color: white;
-            color: #bd84c9;
+            color: rgb(132, 221, 137);
             border: 1px solid #262626;
         }
 
@@ -89,14 +91,14 @@
             margin-left: 10px;
             padding: 8px 16px;
             background-color: #262626;
-            color: rgb(172, 131, 238);
+            color: rgb(132, 221, 137);
             border: none;
             cursor: pointer;
         }
 
         #searchButton:hover {
             background-color: white;
-            color: #bd84c9;
+            color: rgb(132, 221, 137);
             border: 1px solid #262626;
         }
 
@@ -116,7 +118,7 @@
             border: none;
             background: none;
             cursor: pointer;
-           
+
         }
 
         #botaoImagem img {
@@ -144,6 +146,10 @@
             <label for="telefone">Telefone:</label>
             <input type="tel" id="telefone" name="telefone" required><br>
 
+            <label for="dataAssociacao">Data de Associação:</label>
+            <input type="text" id="dataAssociacao" name="dataAssociacao" required>
+
+
             <input type="submit" value="Adicionar Associado">
         </form>
 
@@ -164,6 +170,7 @@
                         <th>E-mail</th>
                         <th>Telefone</th>
                         <th>Data de Associação</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -184,6 +191,7 @@
             var endereco = document.getElementById('endereco').value;
             var email = document.getElementById('email').value;
             var telefone = document.getElementById('telefone').value;
+            var dataAssociacaoInput = document.getElementById('dataAssociacao');
 
             var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
             var newRow = table.insertRow(table.rows.length);
@@ -199,10 +207,18 @@
             cell3.innerHTML = email;
             cell4.innerHTML = telefone;
 
-            var data = new Date();
-            var dataFormatada = data.toLocaleDateString('pt-BR');
+            // Obtém a data de hoje se o campo "Data de Associação" estiver vazio
+            var dataAssociacao = dataAssociacaoInput.value.trim();
+            if (dataAssociacao === "") {
+                var data = new Date();
+                dataAssociacao = data.toLocaleDateString('pt-BR');
+            }
 
-            cell5.innerHTML = dataFormatada;
+            // Preenche a data de associação com o valor apropriado
+            cell5.innerHTML = dataAssociacao;
+
+            // Limpa os campos do formulário após a adição do associado
+            document.getElementById('associadoForm').reset();
         });
 
         document.getElementById('searchButton').addEventListener('click', function () {
@@ -224,6 +240,48 @@
                 row.style.display = found ? '' : 'none';
             }
         });
+        // Função para adicionar uma nova linha na tabela com o botão Excluir
+        function adicionarLinha(nome, endereco, email, telefone, dataFormatada) {
+            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+            var cell6 = newRow.insertCell(5);
+
+            cell1.innerHTML = nome;
+            cell2.innerHTML = endereco;
+            cell3.innerHTML = email;
+            cell4.innerHTML = telefone;
+            cell5.innerHTML = dataFormatada;
+
+            // Adiciona o botão Excluir
+            var btnExcluir = document.createElement('button');
+            btnExcluir.innerHTML = 'Excluir';
+            btnExcluir.onclick = function () {
+                // Chama a função de exclusão passando a linha atual
+                excluirLinha(newRow);
+            };
+
+            // Adiciona o botão Excluir à célula
+            cell6.appendChild(btnExcluir);
+        }
+
+
+        // Função para excluir a linha
+        function excluirLinha(row) {
+            var index = row.rowIndex;
+            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
+            table.deleteRow(index);
+        }
+
+        // Exemplo de chamada da função para adicionar linhas (você pode remover ou modificar conforme necessário)
+        adicionarLinha('João', 'Rua A', 'joao@email.com', '123456789', '01/01/2023');
+        adicionarLinha('Maria', 'Rua B', 'maria@email.com', '987654321', '02/01/2023');
+
         // Voltar a página menu //
         document.getElementById('botaoImagem').onclick = function () {
             window.location.href = 'menu.html';

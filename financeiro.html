@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financeiro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px 50px 0 50px;
+            background-color: #262626;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px 50px 50px 50px;
+            border: 2px solid #262626;
+            background-color: #4d4b4bee ;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            margin: -65px 0 0 50px;
+            background-color: #4d4b4b;
+            border: 2px solid #262626;
+            color: #262626;
+            font-size: 20px;
+            width: 150px;
+            border-radius: 20px;
+            position: absolute;
+        }
+
+        form input,
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        form input[type="submit"] {
+            background-color: #262626;
+            color: rgb(132, 221, 137);
+            border: none;
+            cursor: pointer;
+            width: auto;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: white;
+            color: rgb(132, 221, 137);
+            border: 1px solid #262626;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Estilo para a barra de pesquisa */
+        #searchContainer {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        #search {
+            flex: 1;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        #searchButton {
+            margin-left: 10px;
+            padding: 8px 16px;
+            background-color: #262626;
+            color: rgb(132, 221, 137);
+            border: none;
+            cursor: pointer;
+        }
+
+        #searchButton:hover {
+            background-color: white;
+            color: rgb(132, 221, 137);
+            border: 1px solid #262626;
+        }
+
+        #financeiroTableWrapper {
+            max-height: 100px;
+            /* Define a altura máxima desejada */
+            overflow-y: auto;
+        }
+
+        #botaoImagemContainer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #botaoImagem {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        #botaoImagem img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Financeiro</h1>
+
+        <!-- Formulário para adicionar transações financeiras -->
+        <form id="financeiroForm">
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" name="descricao" required><br>
+
+            <label for="origem">Origem:</label>
+            <select id="origem" name="origem">
+                <option value="Receita">Receita</option>
+                <option value="Despesa">Despesa</option>
+            </select><br>
+
+            <label for="valorEntrada">Valor de Entrada:</label>
+            <input type="number" id="valorEntrada" name="valorEntrada" required><br>
+
+            <label for="valorSaida">Valor de Saída:</label>
+            <input type="number" id="valorSaida" name="valorSaida" required><br>
+
+            <label for="totalGeral">Total Geral:</label>
+            <input type="number" id="totalGeral" name="totalGeral" readonly><br>
+
+            <input type="submit" value="Registrar Transação">
+        </form>
+
+        <!-- Barra de pesquisa -->
+        <div id="searchContainer">
+            <label for="search">Pesquisar:</label>
+            <input type="text" id="search" name="search">
+            <button id="searchButton">Buscar</button>
+        </div>
+
+        <!-- Tabela de transações financeiras -->
+        <div id="financeiroTableWrapper">
+            <table id="financeiroTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descrição</th>
+                        <th>Origem</th>
+                        <th>Valor de Entrada</th>
+                        <th>Valor de Saída</th>
+                        <th>Total Geral</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="botaoImagemContainer">
+        <button id="botaoImagem">
+            <img src="image/imagemMenu.png" alt="Botão de Imagem">
+        </button>
+    </div>
+
+    <script>
+        document.getElementById('financeiroForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Previne o envio padrão do formulário
+
+            // Obtém os valores dos campos
+            var descricao = document.getElementById('descricao').value;
+            var origem = document.getElementById('origem').value;
+            var valorEntrada = document.getElementById('valorEntrada').value;
+            var valorSaida = document.getElementById('valorSaida').value;
+
+            // Calcula o total geral
+            var totalGeral = parseFloat(valorEntrada) - parseFloat(valorSaida);
+
+            // Gera um ID único (para simular, pode ser trocado por uma lógica mais apropriada)
+            var id = Date.now();
+
+            // Cria uma nova linha na tabela
+            var table = document.getElementById('financeiroTable').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+            var cell6 = newRow.insertCell(5);
+
+            // Define os valores das células
+            cell1.innerHTML = id;
+            cell2.innerHTML = descricao;
+            cell3.innerHTML = origem;
+            cell4.innerHTML = valorEntrada;
+            cell5.innerHTML = valorSaida;
+            cell6.innerHTML = totalGeral;
+
+            // Limpa os campos do formulário
+            document.getElementById('descricao').value = '';
+            document.getElementById('origem').value = 'Receita';
+            document.getElementById('valorEntrada').value = '';
+            document.getElementById('valorSaida').value = '';
+            document.getElementById('totalGeral').value = '';
+        });
+
+        document.getElementById('searchButton').addEventListener('click', function () {
+            var searchTerm = document.getElementById('search').value.toLowerCase();
+
+            var table = document.getElementById('financeiroTable').getElementsByTagName('tbody')[0];
+
+            for (var i = 0, row; row = table.rows[i]; i++) {
+                var found = false;
+
+                for (var j = 0, cell; cell = row.cells[j]; j++) {
+                    var textContent = cell.textContent.toLowerCase();
+                    if (textContent.includes(searchTerm)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                row.style.display = found ? '' : 'none';
+            }
+        });
+
+        // Voltar a página menu //
+        document.getElementById('botaoImagem').onclick = function () {
+            window.location.href = 'menu.html';
+        };
+    </script>
+</body>
+
+</html>
