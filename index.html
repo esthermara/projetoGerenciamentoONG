@@ -84,9 +84,15 @@ button:hover {
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Entrar</button>
+            <button id="botaoentrar" type="submit">Entrar</button>
         </form>
     </div>
+    <script>
+        // Ir para pagina menu //
+        document.getElementById('botaoentrar').onclick = function () {
+            window.location.href = 'menu.html';
+        };
+    </script>
 </body>
 
 </html>
