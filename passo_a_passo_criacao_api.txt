@@ -2,12 +2,13 @@
 
 1 - atualizei o NodeJs e instalei o MySQL e WorkBench;
 2 - executei o script do BD;
-3 - criei o arquiso api.js no projeto;
-4 - executei o comando no terminal: npm install express mysql;
-5 - executei o comando no terminal: npm install cors;
-6 - criei a tag script necessária na página do front estoque.html;
-7 - executei o comando no terminal: node api.js;
-8 - abri o projeto;
-9 - para finalizar a api.js, o comando é: crtl + c.
+3 - atualizei a senha geral do MySQL pelocomando: ALTER USER 'seu_usuario_mysql'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'sua_senha_mysql';
+4 - criei o arquiso api.js no projeto;
+5 - executei o comando no terminal: npm install express mysql;
+6 - executei o comando no terminal: npm install cors;
+7 - criei a tag script necessária na página do front estoque.html;
+8 - executei o comando no terminal: node api.js;
+9 - abri o projeto;
+10 - para finalizar a api.js, o comando é: crtl + c.
 
 --------------------------------------------------------------
