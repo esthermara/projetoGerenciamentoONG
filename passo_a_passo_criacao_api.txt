@@ -1,0 +1,13 @@
+-------------------------------------------------------------
+
+1 - atualizei o NodeJs e instalei o MySQL e WorkBench;
+2 - executei o script do BD;
+3 - criei o arquiso api.js no projeto;
+4 - executei o comando no terminal: npm install express mysql;
+5 - executei o comando no terminal: npm install cors;
+6 - criei a tag script necessária na página do front estoque.html;
+7 - executei o comando no terminal: node api.js;
+8 - abri o projeto;
+9 - para finalizar a api.js, o comando é: crtl + c.
+
+--------------------------------------------------------------
