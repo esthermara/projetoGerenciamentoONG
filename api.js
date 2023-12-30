@@ -1,52 +1,42 @@
 const express = require('express');
-const { Pool } = require('mysql');
+const cors = require('cors');
+const mysql = require('mysql');
 
 const app = express();
 const port = 3000;
 
-// Configuração do pool de conexões para o PostgreSQL
-const pool = new Pool({
+app.use(cors());
+
+const db = mysql.createConnection({
+  host: 'localhost',
   user: 'root',
-  host: '127.0.0.1',
-  database: 'gerenciamentoong',
   password: 'adm1030#$3010',
-  port: 3306,
+  database: 'gerenciamentoong'
 });
 
-// Configuração do express para lidar com JSON
-app.use(express.json());
+db.connect((err) => {
+  if (err) {
+    console.error('Erro ao conectar ao banco de dados:', err);
+  } else {
+    console.log('Conexão bem-sucedida ao banco de dados');
+  }
+});
 
-// Rota para resgatar os dados da tabela com base no código
-app.get('/getProduct/:idEstoque', (req, res) => {
-  const codigo = req.params.codigo;
-
-  // Consulta SQL para buscar o produto pelo código
-  const query = {
-    text: 'SELECT * FROM estoque WHERE idEstoque = $1',
-    values: [codigo],
-  };
-
-  // Executa a consulta
-  pool.query(query)
-    .then(result => {
-      if (result.rows.length > 0) {
-        // Envia os dados do produto em formato JSON
-        res.json(result.rows[0]);
+app.get('/estoque', (req, res) => {
+    const query = 'SELECT * FROM Estoque';
+  
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Erro ao executar a consulta:', err);
+        res.status(500).send('Erro interno no servidor');
       } else {
-        res.status(404).json({ message: 'Produto não encontrado' });
+        console.log('Dados do estoque enviados com sucesso:', results);
+        res.json(results);
       }
-    })
-    .catch(error => {
-      res.status(500).json({ error: error.message });
     });
-});
+  });
+  
 
-// Rota para servir a página HTML
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-// Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estoque</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -162,15 +165,16 @@
         <div id="estoqueTableWrapper">
             <table id="estoqueTable">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Descrição</th>
-                        <th>Quantidade</th>
-                        <th>Origem</th>
-                    </tr>
+                  <tr>
+                    <th>ID</th>
+                    <th>Número de Controle</th>
+                    <th>Descrição</th>
+                    <th>Quantidade</th>
+                    <th>Origem</th>
+                  </tr>
                 </thead>
                 <tbody></tbody>
-            </table>
+              </table>
         </div>
     </div>
     <div id="botaoImagemContainer">
@@ -178,63 +182,37 @@
             <img src="image/imagemMenu.png" alt="Botão de Imagem">
         </button>
     </div>
-
-    <script>
-        document.getElementById('estoqueForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Previne o envio padrão do formulário
-
-            // Obtém os valores dos campos
-            var descricao = document.getElementById('descricao').value;
-            var quantidade = document.getElementById('quantidade').value;
-            var origem = document.getElementById('origem').value;
-
-            // Gera um ID único (para simular, pode ser trocado por uma lógica mais apropriada)
-            var id = Date.now();
-
-            // Cria uma nova linha na tabela
-            var table = document.getElementById('estoqueTable').getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-
-            // Define os valores das células
-            cell1.innerHTML = id;
-            cell2.innerHTML = descricao;
-            cell3.innerHTML = quantidade;
-            cell4.innerHTML = origem;
-
-            // Limpa os campos do formulário
-            document.getElementById('descricao').value = '';
-            document.getElementById('quantidade').value = '';
-            document.getElementById('origem').value = 'Doação';
+	
+	<script>
+    document.addEventListener('DOMContentLoaded', fetchData);
+  
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:3000/estoque');
+        const data = await response.json();
+  
+        const tableBody = document.querySelector('#estoqueTable tbody');
+        tableBody.innerHTML = '';
+  
+        data.forEach((item) => {
+          const row = tableBody.insertRow();
+          row.insertCell(0).textContent = item.idEstoque;
+          row.insertCell(1).textContent = item.numeroControle;
+          row.insertCell(2).textContent = item.descricao;
+          row.insertCell(3).textContent = item.quantidade;
+          row.insertCell(4).textContent = item.origem;
         });
+      } catch (error) {
+        console.error('Erro ao buscar dados da API:', error);
+      }
+    }
+	
+	// Voltar a página menu //
+    document.getElementById('botaoImagem').onclick = function () {
+        window.location.href = 'menu.html';
+    };
+  </script>
 
-        document.getElementById('searchButton').addEventListener('click', function () {
-            var searchTerm = document.getElementById('search').value.toLowerCase();
-
-            var table = document.getElementById('estoqueTable').getElementsByTagName('tbody')[0];
-
-            for (var i = 0, row; row = table.rows[i]; i++) {
-                var found = false;
-
-                for (var j = 0, cell; cell = row.cells[j]; j++) {
-                    var textContent = cell.textContent.toLowerCase();
-                    if (textContent.includes(searchTerm)) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                row.style.display = found ? '' : 'none';
-            }
-        });
-        // Voltar a página menu //
-        document.getElementById('botaoImagem').onclick = function () {
-            window.location.href = 'menu.html';
-        };
-    </script>
 </body>
 
 </html>
