@@ -20,7 +20,7 @@
             margin: 0 auto;
             padding: 50px 50px 50px 50px;
             border: 2px solid #262626;
-            background-color: #4d4b4bee ;
+            background-color: #4d4b4bee;
             border-radius: 20px;
             color: white;
             font-weight: bold;
@@ -56,7 +56,7 @@
 
         form input[type="submit"]:hover {
             background-color: white;
-            color:rgb(132, 221, 137);
+            color: rgb(132, 221, 137);
             border: 1px solid #262626;
         }
 
@@ -138,11 +138,14 @@
 
         <!-- Formulário para adicionar itens ao estoque -->
         <form id="estoqueForm">
+            <label for="numeroControle">Número de Controle:</label>
+            <input type="text" id="numeroControle" name="numeroControle" required><br>
+
             <label for="descricao">Descrição:</label>
             <input type="text" id="descricao" name="descricao" required><br>
 
             <label for="quantidade">Quantidade:</label>
-            <input type="number" id="quantidade" name="quantidade" required><br>
+            <input type="text" id="quantidade" name="quantidade" required><br>
 
             <label for="origem">Origem:</label>
             <select id="origem" name="origem">
@@ -151,7 +154,7 @@
                 <option value="Instituicao">Instituição</option>
             </select><br>
 
-            <input type="submit" value="Adicionar Item ao Estoque">
+            <button type="button" onclick="criarItem()">Adicionar item ao estoque</button>
         </form>
 
         <!-- Barra de pesquisa -->
@@ -166,16 +169,16 @@
         <div id="estoqueTableWrapper">
             <table id="estoqueTable">
                 <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Número de Controle</th>
-                    <th>Descrição</th>
-                    <th>Quantidade</th>
-                    <th>Origem</th>
-                  </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número de Controle</th>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>
+                        <th>Origem</th>
+                    </tr>
                 </thead>
                 <tbody></tbody>
-              </table>
+            </table>
         </div>
     </div>
     <div id="botaoImagemContainer">
@@ -183,36 +186,74 @@
             <img src="image/imagemMenu.png" alt="Botão de Imagem">
         </button>
     </div>
-	
-	<script>
-    document.addEventListener('DOMContentLoaded', fetchData);
-  
-    async function fetchData() {
-      try {
-        const response = await fetch('http://localhost:3000/estoque');
-        const data = await response.json();
-  
-        const tableBody = document.querySelector('#estoqueTable tbody');
-        tableBody.innerHTML = '';
-  
-        data.forEach((item) => {
-          const row = tableBody.insertRow();
-          row.insertCell(0).textContent = item.idEstoque;
-          row.insertCell(1).textContent = item.numeroControle;
-          row.insertCell(2).textContent = item.descricao;
-          row.insertCell(3).textContent = item.quantidade;
-          row.insertCell(4).textContent = item.origem;
-        });
-      } catch (error) {
-        console.error('Erro ao buscar dados da API:', error);
-      }
-    }
-	
-	// Voltar a página menu //
-    document.getElementById('botaoImagem').onclick = function () {
-        window.location.href = 'menu.html';
-    };
-  </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/estoque');
+                const data = await response.json();
+
+                const tableBody = document.querySelector('#estoqueTable tbody');
+                tableBody.innerHTML = '';
+
+                data.forEach((item) => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = item.idEstoque;
+                    row.insertCell(1).textContent = item.numeroControle;
+                    row.insertCell(2).textContent = item.descricao;
+                    row.insertCell(3).textContent = item.quantidade;
+                    row.insertCell(4).textContent = item.origem;
+
+                    const actionsCell = row.insertCell(5);
+                    actionsCell.innerHTML = `
+          <button onclick="atualizarItem(${item.idEstoque})">Atualizar</button>
+          <button onclick="excluirItem(${item.idEstoque})">Excluir</button>
+        `;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados da API:', error);
+            }
+        }
+
+        async function criarItem() {
+            const numeroControle = document.getElementById('numeroControle').value;
+            const descricao = document.getElementById('descricao').value;
+            const quantidade = document.getElementById('quantidade').value;
+            const origem = document.getElementById('origem').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/estoque', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ numeroControle, descricao, quantidade, origem }),
+                });
+
+                if (response.ok) {
+                    fetchData();
+                    // Limpar campos do formulário após criar o item
+                    document.getElementById('numeroControle').value = '';
+                    document.getElementById('descricao').value = '';
+                    document.getElementById('quantidade').value = '';
+                    document.getElementById('origem').value = '';
+                } else {
+                    console.error('Erro ao criar item:', response.statusText);
+                    alert('Erro ao criar item. Verifique o console para mais detalhes.');
+                }
+            } catch (error) {
+                console.error('Erro ao criar item:', error.message);
+                alert('Erro ao criar item. Verifique o console para mais detalhes.');
+            }
+        }
+
+        // Voltar a página menu //
+        document.getElementById('botaoImagem').onclick = function () {
+            window.location.href = 'menu.html';
+        };
+    </script>
 
 </body>
 

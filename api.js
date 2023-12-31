@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 
 app.use(cors());
+app.use(express.json());
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -22,20 +23,79 @@ db.connect((err) => {
   }
 });
 
+//API PARA A TABELA ESTOQUE *****************************************************
+
+//Rota que popula a tabela etoqueTable
 app.get('/estoque', (req, res) => {
-    const query = 'SELECT * FROM Estoque';
-  
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Erro ao executar a consulta:', err);
-        res.status(500).send('Erro interno no servidor');
-      } else {
-        console.log('Dados do estoque enviados com sucesso:', results);
-        res.json(results);
-      }
-    });
+  const query = 'SELECT * FROM Estoque';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Erro ao executar a consulta:', err);
+      res.status(500).send('Erro interno no servidor');
+    } else {
+      console.log('Dados do estoque enviados com sucesso:', results);
+      res.json(results);
+    }
   });
-  
+});
+
+// Rota para criar um novo item no estoque
+app.post('/estoque', (req, res) => {
+  const { numeroControle, descricao, quantidade, origem } = req.body;
+
+  const query = 'INSERT INTO Estoque (numeroControle, descricao, quantidade, origem) VALUES (?, ?, ?, ?)';
+  const values = [numeroControle, descricao, quantidade, origem];
+
+  db.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Erro ao inserir no banco de dados:', err);
+      res.status(500).send('Erro interno no servidor');
+    } else {
+      console.log('Novo item adicionado ao estoque:', results.insertId);
+      res.json({ id: results.insertId });
+    }
+  });
+});
+
+
+// Rota para atualizar um item no estoque
+app.put('/estoque/:id', (req, res) => {
+  const { numeroControle, descricao, quantidade, origem } = req.body;
+  const { id } = req.params;
+
+  const query = 'UPDATE Estoque SET numeroControle=?, descricao=?, quantidade=?, origem=? WHERE idEstoque=?';
+  const values = [numeroControle, descricao, quantidade, origem, id];
+
+  db.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Erro ao atualizar no banco de dados:', err);
+      res.status(500).send('Erro interno no servidor');
+    } else {
+      console.log('Item atualizado no estoque:', id);
+      res.json({ success: true });
+    }
+  });
+});
+
+// Rota para excluir um item do estoque
+app.delete('/estoque/:id', (req, res) => {
+  const { id } = req.params;
+
+  const query = 'DELETE FROM Estoque WHERE idEstoque=?';
+  const values = [id];
+
+  db.query(query, values, (err) => {
+    if (err) {
+      console.error('Erro ao excluir do banco de dados:', err);
+      res.status(500).send('Erro interno no servidor');
+    } else {
+      console.log('Item excluído do estoque:', id);
+      res.json({ success: true });
+    }
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
