@@ -58,26 +58,6 @@ app.post('/estoque', (req, res) => {
   });
 });
 
-
-// Rota para atualizar um item no estoque
-app.put('/estoque/:id', (req, res) => {
-  const { numeroControle, descricao, quantidade, origem } = req.body;
-  const { id } = req.params;
-
-  const query = 'UPDATE Estoque SET numeroControle=?, descricao=?, quantidade=?, origem=? WHERE idEstoque=?';
-  const values = [numeroControle, descricao, quantidade, origem, id];
-
-  db.query(query, values, (err, results) => {
-    if (err) {
-      console.error('Erro ao atualizar no banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
-    } else {
-      console.log('Item atualizado no estoque:', id);
-      res.json({ success: true });
-    }
-  });
-});
-
 // Rota para excluir um item do estoque
 app.delete('/estoque/:id', (req, res) => {
   const { id } = req.params;
@@ -96,7 +76,16 @@ app.delete('/estoque/:id', (req, res) => {
   });
 });
 
+//API PARA A TABELA ASSOCIADOS *****************************************************
 
+
+//API PARA A TABELA OFICINAS *****************************************************
+
+
+//API PARA A TABELA FINANCEIRO *****************************************************
+
+
+//*********************************************************************************
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });

@@ -162,7 +162,6 @@
             <label for="search">Pesquisar:</label>
             <label>&nbsp;&nbsp;</label>
             <input type="text" id="search" name="search">
-            <button id="searchButton">Buscar</button>
         </div>
         <br />
 
@@ -189,6 +188,8 @@
     </div>
 
     <script>
+
+        //Evento de refresh na tabela, a inserir ou excluir um item.
         document.addEventListener('DOMContentLoaded', fetchData);
 
         async function fetchData() {
@@ -215,6 +216,7 @@
             }
         }
 
+        //Evento de criar ou inserir um item
         async function criarItem() {
             const numeroControle = document.getElementById('numeroControle').value;
             const descricao = document.getElementById('descricao').value;
@@ -247,6 +249,7 @@
             }
         }
 
+        //Evento de excluir o item
         async function excluirItem(id) {
             if (confirm('Deseja realmente excluir este item?')) {
                 try {
@@ -274,6 +277,23 @@
             document.getElementById('quantidade').value = '';
             document.getElementById('origem').value = '';
         }
+
+        //Evento de pesquisar
+        document.getElementById('search').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#estoqueTable tbody tr');
+
+            tableRows.forEach((row) => {
+                const descricaoCell = row.querySelector('td:nth-child(3)');
+                const descricaoText = descricaoCell.textContent.toLowerCase();
+
+                if (descricaoText.includes(searchTerm)) {
+                    row.style.display = ''; // Exibe a linha se a descrição contiver o termo de pesquisa
+                } else {
+                    row.style.display = 'none'; // Oculta a linha se a descrição não contiver o termo de pesquisa
+                }
+            });
+        });
 
         // Voltar a página menu //
         document.getElementById('botaoImagem').onclick = function () {
