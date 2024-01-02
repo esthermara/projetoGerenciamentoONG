@@ -129,6 +129,19 @@
             height: 50px;
             border-radius: 50%;
         }
+        #btnAdicionar {
+            padding: 8px 16px;
+            background-color: #262626;
+            color: rgb(132, 221, 137);
+            border: none;
+            cursor: pointer; 
+        }
+        #btnAdicionar:hover {
+            background-color: white;
+            color: rgb(132, 221, 137);
+            border: 1px solid #262626;  
+        }
+
     </style>
 </head>
 
@@ -154,7 +167,7 @@
                 <option value="Instituição">Instituição</option>
             </select><br>
 
-            <button type="button" onclick="criarItem()">Adicionar item ao estoque</button>
+            <button id="btnAdicionar" type="button" onclick="criarItem()">Adicionar item ao estoque</button>
         </form>
 
         <!-- Barra de pesquisa -->
