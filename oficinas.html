@@ -135,25 +135,25 @@
         <!-- Formulário para adicionar oficinas -->
         <form id="oficinasForm">
             <label for="oficina">Oficina:</label>
-            <input type="text" id="oficina" name="oficina" required><br>
+            <input type="text" id="nomeOficina" name="nomeOficina" required><br>
 
             <label for="diaSemana">Dia da Semana:</label>
             <input type="text" id="diaSemana" name="diaSemana" required><br>
 
             <label for="horario">Horário:</label>
-            <input type="text" id="horario" name="horario" required><br>
+            <input type="time" id="horario" name="horario" required><br>
 
             <label for="professora">Professor(a):</label>
             <input type="text" id="professor" name="professor" required><br>
 
-            <input type="submit" value="Adicionar Oficina">
+            <button id="btnAdicionar" type="button" onclick="criarItem()">Adicionar oficina</button>
         </form>
 
         <!-- Barra de pesquisa -->
         <div id="searchContainer">
-            <label for="search">Pesquisar:</label>
+            <label for="search">Pesquisar oficina:</label>
+            <label>&nbsp;&nbsp;</label>
             <input type="text" id="search" name="search">
-            <button id="searchButton">Buscar</button>
         </div>
         <br />
 
@@ -180,48 +180,113 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('oficinasForm');
-            const tableBody = document.querySelector('#oficinasTable tbody');
-            const searchButton = document.getElementById('searchButton');
 
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
+        //Evento de refresh na tabela, a inserir ou excluir um item.
+        document.addEventListener('DOMContentLoaded', fetchData);
 
-                const oficina = document.getElementById('oficina').value;
-                const diaSemana = document.getElementById('diaSemana').value;
-                const horario = document.getElementById('horario').value;
-                const professora = document.getElementById('professor').value;
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/oficinas');
+                const data = await response.json();
 
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-            <td>${tableBody.children.length + 1}</td>
-            <td>${oficina}</td>
-            <td>${diaSemana}</td>
-            <td>${horario}</td>
-            <td>${professor}</td>
-        `;
+                const tableBody = document.querySelector('#oficinasTable tbody');
+                tableBody.innerHTML = '';
 
-                tableBody.appendChild(newRow);
+                data.forEach((item) => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = item.idOficinas;
+                    row.insertCell(1).textContent = item.nomeOficina;
+                    row.insertCell(2).textContent = item.diaSemana;
+                    row.insertCell(3).textContent = item.horario;
+                    row.insertCell(4).textContent = item.professor;
 
-                form.reset();
-            });
-
-            searchButton.addEventListener('click', function () {
-                const searchTerm = document.getElementById('search').value.toLowerCase();
-
-                tableBody.querySelectorAll('tr').forEach(function (row) {
-                    let found = false;
-                    row.querySelectorAll('td').forEach(function (cell) {
-                        const textContent = cell.textContent.toLowerCase();
-                        if (textContent.includes(searchTerm)) {
-                            found = true;
-                        }
-                    });
-                    row.style.display = found ? '' : 'none';
+                    const actionsCell = row.insertCell(5);
+                    actionsCell.innerHTML = `<button onclick="excluirItem(${item.idOficinas})">Excluir</button>`;
                 });
+            } catch (error) {
+                console.error('Erro ao buscar dados da API:', error);
+            }
+        }
+        
+        //Evento de criar ou inserir um item
+        async function criarItem() {
+            const nomeOficina = document.getElementById('nomeOficina').value;
+            const diaSemana = document.getElementById('diaSemana').value;
+            const horario = document.getElementById('horario').value;
+            const professor = document.getElementById('professor').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/oficinas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nomeOficina, diaSemana, horario, professor }),
+                });
+
+                if (response.ok) {
+                    fetchData();
+                    // Limpar campos do formulário após criar o item
+                    document.getElementById('nomeOficina').value = '';
+                    document.getElementById('diaSemana').value = '';
+                    document.getElementById('horario').value = '';
+                    document.getElementById('professor').value = '';
+                } else {
+                    console.error('Erro ao criar item:', response.statusText);
+                    alert('Erro ao criar item. Verifique o console para mais detalhes.');
+                }
+            } catch (error) {
+                console.error('Erro ao criar item:', error.message);
+                alert('Erro ao criar item. Verifique o console para mais detalhes.');
+            }
+        }
+
+        //Evento de excluir o item
+        async function excluirItem(id) {
+            if (confirm('Deseja realmente excluir esta oficina?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/oficinas/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        fetchData(); // Recarrega os dados após a exclusão
+                    } else {
+                        console.error('Erro ao excluir item:', response.statusText);
+                        alert('Erro ao excluir item. Verifique o console para mais detalhes.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir item:', error.message);
+                    alert('Erro ao excluir item. Verifique o console para mais detalhes.');
+                }
+            }
+        }
+
+        // Limpar campos do formulário
+        function limparFormulario() {
+            document.getElementById('nomeOficina').value = '';
+            document.getElementById('diaSemana').value = '';
+            document.getElementById('horaio').value = '';
+            document.getElementById('professor').value = '';
+        }
+
+        //Evento de pesquisar
+        document.getElementById('search').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#oficinasTable tbody tr');
+
+            tableRows.forEach((row) => {
+                const nomeOficinaCell = row.querySelector('td:nth-child(2)');
+                const nomeOficinaText = nomeOficinaCell.textContent.toLowerCase();
+
+                if (nomeOficinaText.includes(searchTerm)) {
+                    row.style.display = ''; // Exibe a linha se a descrição contiver o termo de pesquisa
+                } else {
+                    row.style.display = 'none'; // Oculta a linha se a descrição não contiver o termo de pesquisa
+                }
             });
         });
+
         // Voltar a página menu //
         document.getElementById('botaoImagem').onclick = function () {
             window.location.href = 'menu.html';

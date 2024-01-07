@@ -132,41 +132,41 @@ app.delete('/associados/:id', (reqAssociados, resAssociados) => {
 //API PARA A TABELA OFICINAS *****************************************************
 
 //Rota que popula a tabela oficinasTable
-app.get('/oficinas', (req, res) => {
+app.get('/oficinas', (reqOficinas, resOficinas) => {
   const query = 'SELECT * FROM Oficinas';
 
-  db.query(query, (err, results) => {
+  db.query(query, (err, resultsOficinas) => {
     if (err) {
       console.error('Erro ao executar a consulta:', err);
-      res.status(500).send('Erro interno no servidor');
+      resOficinas.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Dados das oficinas enviados com sucesso!', results);
-      res.json(results);
+      console.log('Dados das oficinas enviados com sucesso!', resultsOficinas);
+      resOficinas.json(resultsOficinas);
     }
   });
 });
 
 // Rota para criar um novo item no oficinas
-app.post('/oficinas', (req, res) => {
-  const { nomeOficina, diaSemana, horario, professor } = req.body;
+app.post('/oficinas', (reqOficinas, resOficinas) => {
+  const { nomeOficina, diaSemana, horario, professor } = reqOficinas.body;
 
   const query = 'INSERT INTO Oficinas (nomeOficina, diaSemana, horario, professor) VALUES (?, ?, ?, ?)';
   const values = [nomeOficina, diaSemana, horario, professor];
 
-  db.query(query, values, (err, results) => {
+  db.query(query, values, (err, resultsOficinas) => {
     if (err) {
       console.error('Erro ao inserir no banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resOficinas.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Nova oficina adicionada!', results.insertId);
-      res.json({ id: results.insertId });
+      console.log('Nova oficina adicionada!', resultsOficinas.insertId);
+      resOficinas.json({ id: resultsOficinas.insertId });
     }
   });
 });
 
 // Rota para excluir um item do oficinas
-app.delete('/oficinas/:id', (req, res) => {
-  const { id } = req.params;
+app.delete('/oficinas/:id', (reqOficinas, resOficinas) => {
+  const { id } = reqOficinas.params;
 
   const query = 'DELETE FROM Oficinas WHERE idOficinas=?';
   const values = [id];
@@ -174,10 +174,10 @@ app.delete('/oficinas/:id', (req, res) => {
   db.query(query, values, (err) => {
     if (err) {
       console.error('Erro ao excluir do banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resOficinas.status(500).send('Erro interno no servidor');
     } else {
       console.log('Excluído das oficinas!', id);
-      res.json({ success: true });
+      resOficinas.json({ success: true });
     }
   });
 });
