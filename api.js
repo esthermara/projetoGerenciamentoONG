@@ -185,41 +185,41 @@ app.delete('/oficinas/:id', (reqOficinas, resOficinas) => {
 //API PARA A TABELA FATURAMENTO *****************************************************
 
 //Rota que popula a tabela financeiroTable
-app.get('/faturamento', (req, res) => {
+app.get('/faturamento', (reqFinanceiro, resFinanceiro) => {
   const query = 'SELECT * FROM Faturamento';
 
-  db.query(query, (err, results) => {
+  db.query(query, (err, resultsFinanceiro) => {
     if (err) {
       console.error('Erro ao executar a consulta:', err);
-      res.status(500).send('Erro interno no servidor');
+      resFinanceiro.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Dados do faturamento enviados com sucesso!', results);
-      res.json(results);
+      console.log('Dados do faturamento enviados com sucesso!', resultsFinanceiro);
+      resFinanceiro.json(resultsFinanceiro);
     }
   });
 });
 
 // Rota para criar um novo item no faturamento
-app.post('/faturamento', (req, res) => {
-  const { descricao, origem, valorEntrada, valorSaida, totalGeral } = req.body;
+app.post('/faturamento', (reqFinanceiro, resFinanceiro) => {
+  const { descricao, origem, valorEntrada, valorSaida, totalGeral } = reqFinanceiro.body;
 
-  const query = 'INSERT INTO Faturamento (descricao, origem, valorEntrada, valorSaida, totalGeral) VALUES (?, ?, ?, ?)';
+  const query = 'INSERT INTO Faturamento (descricao, origem, valorEntrada, valorSaida, totalGeral) VALUES (?, ?, ?, ?, ?)';
   const values = [descricao, origem, valorEntrada, valorSaida, totalGeral];
 
-  db.query(query, values, (err, results) => {
+  db.query(query, values, (err, resultsFinanceiro) => {
     if (err) {
       console.error('Erro ao inserir no banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resFinanceiro.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Novo dado de faturamento adicionado!', results.insertId);
-      res.json({ id: results.insertId });
+      console.log('Novo dado de faturamento adicionado!', resultsFinanceiro.insertId);
+      resFinanceiro.json({ id: resultsFinanceiro.insertId });
     }
   });
 });
 
 // Rota para excluir um item do faturamento
-app.delete('/faturamento/:id', (req, res) => {
-  const { id } = req.params;
+app.delete('/faturamento/:id', (reqFinanceiro, resFinanceiro) => {
+  const { id } = reqFinanceiro.params;
 
   const query = 'DELETE FROM Faturamento WHERE idFaturamento=?';
   const values = [id];
@@ -227,37 +227,52 @@ app.delete('/faturamento/:id', (req, res) => {
   db.query(query, values, (err) => {
     if (err) {
       console.error('Erro ao excluir do banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resFinanceiro.status(500).send('Erro interno no servidor');
     } else {
       console.log('Excluído do faturamento!', id);
-      res.json({ success: true });
+      resFinanceiro.json({ success: true });
     }
   });
 });
 
 //API PARA A TABELA USUÁRIO *****************************************************
 
-// Rota para criar um novo item no usuario
-app.post('/usuario', (req, res) => {
-  const { nome, senha, competencia } = req.body;
+//Rota que popula a tabela usuario
+app.get('/usuario', (reqUsuario, resUsuario) => {
+  const query = 'SELECT * FROM Usuario';
 
-  const query = 'INSERT INTO Usuario (nome, senha, competencia) VALUES (?, ?, ?, ?)';
-  const values = [nome, senha, competencia];
-
-  db.query(query, values, (err, results) => {
+  db.query(query, (err, resultsUsuario) => {
     if (err) {
-      console.error('Erro ao inserir no banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      console.error('Erro ao executar a consulta:', err);
+      resUsuario.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Novo usuário adicionado!', results.insertId);
-      res.json({ id: results.insertId });
+      console.log('Dados do faturamento enviados com sucesso!', resultsUsuario);
+      resUsuario.json(resultsUsuario);
     }
   });
 });
 
-// Rota para excluir um item do usuario
-app.delete('/usuario/:id', (req, res) => {
-  const { id } = req.params;
+// Rota para criar um novo item no usuario
+app.post('/usuario', (reqUsuario, resUsuario) => {
+  const { nome, senha, competencia } = reqUsuario.body;
+
+  const query = 'INSERT INTO Usuario (nome, senha, competencia) VALUES (?, ?, ?)';
+  const values = [nome, senha, competencia];
+
+  db.query(query, values, (err, resultsUsuario) => {
+    if (err) {
+      console.error('Erro ao inserir no banco de dados:', err);
+      resUsuario.status(500).send('Erro interno no servidor');
+    } else {
+      console.log('Novo usuário adicionado!', resultsUsuario.insertId);
+      resUsuario.json({ id: resultsUsuario.insertId });
+    }
+  });
+});
+
+// Rota para excluir um item do usuario (ainda não utilizada!!!)
+app.delete('/usuario/:id', (reqUsuario, resUsuario) => {
+  const { id } = reqUsuario.params;
 
   const query = 'DELETE FROM Usuario WHERE idUsuario=?';
   const values = [id];
@@ -265,10 +280,10 @@ app.delete('/usuario/:id', (req, res) => {
   db.query(query, values, (err) => {
     if (err) {
       console.error('Erro ao excluir do banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resUsuario.status(500).send('Erro interno no servidor');
     } else {
       console.log('Usuário excluído!', id);
-      res.json({ success: true });
+      resUsuario.json({ success: true });
     }
   });
 });

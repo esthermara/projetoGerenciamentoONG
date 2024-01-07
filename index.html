@@ -103,7 +103,7 @@
                     <label for="competenciaLogin">Competência</label>
                     <select id="competenciaLogin" name="competenciaLogin" required>
                         <option value="Escolher"></option>
-                        <option value="administração">Administração</option>
+                        <option value="administrador">Administrador</option>
                         <option value="colaborador">Colaborador</option>
                     </select>
                 </div>
@@ -117,22 +117,22 @@
             <form id="signup">
                 <h2>Cadastre-se</h2>
                 <div class="form-group">
-                    <label for="newUsername">Novo Usuário</label>
-                    <input type="text" id="newUsername" name="newUsername" required>
+                    <label for="novoUsuario">Novo Usuário</label>
+                    <input type="text" id="nome" name="novoUsuario" required>
                 </div>
                 <div class="form-group">
-                    <label for="newPassword">Nova Senha</label>
-                    <input type="password" id="newPassword" name="newPassword" required>
+                    <label for="novaSenha">Nova Senha</label>
+                    <input type="text" id="senha" name="novaSenha" required title="Senha do tipo alfanumérica, com no máximo 15 caracteres.">
                 </div>
                 <div class="form-group">
                     <label for="competenciaCadastro">Competência</label>
-                    <select id="competenciaCadastro" name="competenciaCadastro" required>
+                    <select id="competencia" name="competenciaCadastro" required>
                         <option value="Escolher"></option>
-                        <option value="administração">Administração</option>
+                        <option value="administrador">Administrador</option>
                         <option value="colaborador">Colaborador</option>
                     </select>
                 </div>
-                <button type="submit">Cadastrar</button>
+                <button id="btnAdicionar" type="button" onclick="criarItem()">Registrar transação</button>
                 <p>Já tem uma conta? <a href="#" id="showLogin">Faça login</a></p>
             </form>
         </div>
@@ -165,6 +165,44 @@
             console.log('Formulário de login enviado.');
             // Aqui você pode adicionar a lógica de login.
         });
+
+        //Evento de criar ou inserir um item
+        async function criarItem() {
+            const nome = document.getElementById('nome').value;
+            const senha = document.getElementById('senha').value;
+            const competencia = document.getElementById('competencia').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/usuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nome, senha, competencia }),
+                });
+
+                if (response.ok) {
+                    // Limpar campos do formulário após criar o item
+                    document.getElementById('nome').value = '';
+                    document.getElementById('senha').value = '';
+                    document.getElementById('competencia').value = '';
+                } else {
+                    console.error('Erro ao criar item:', response.statusText);
+                    alert('Erro ao criar item. Verifique o console para mais detalhes.');
+                }
+            } catch (error) {
+                console.error('Erro ao criar item:', error.message);
+                alert('Erro ao criar item. Verifique o console para mais detalhes.');
+            }
+        }
+
+        // Limpar campos do formulário
+        function limparFormulario() {
+            document.getElementById('nome').value = '';
+            document.getElementById('senha').value = '';
+            document.getElementById('competencia').value = '';
+        }
+
     </script>
 </body>
 

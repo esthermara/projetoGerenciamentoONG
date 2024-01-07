@@ -140,27 +140,28 @@
 
             <label for="origem">Origem:</label>
             <select id="origem" name="origem">
+                <option value="escolhaOrigem"></option>
                 <option value="Receita">Receita</option>
                 <option value="Despesa">Despesa</option>
             </select><br>
 
             <label for="valorEntrada">Valor de Entrada:</label>
-            <input type="number" id="valorEntrada" name="valorEntrada" required><br>
+            <input type="number" step=".01" id="valorEntrada" name="valorSaida" required><br />
 
             <label for="valorSaida">Valor de Saída:</label>
-            <input type="number" id="valorSaida" name="valorSaida" required><br>
+            <input type="number" step=".01" id="valorSaida" name="valorSaida" required><br />
 
             <label for="totalGeral">Total Geral:</label>
-            <input type="number" id="totalGeral" name="totalGeral" readonly><br>
+            <input type="number" step=".01" id="totalGeral" name="valorSaida" required><br />
 
-            <input type="submit" value="Registrar Transação">
+            <button id="btnAdicionar" type="button" onclick="criarItem()">Registrar transação</button>
         </form>
 
         <!-- Barra de pesquisa -->
         <div id="searchContainer">
-            <label for="search">Pesquisar:</label>
+            <label for="search">Pesquisar transação:</label>
+            <label>&nbsp;&nbsp;</label>
             <input type="text" id="search" name="search">
-            <button id="searchButton">Buscar</button>
         </div>
         <br />
 
@@ -188,65 +189,115 @@
     </div>
 
     <script>
-        document.getElementById('financeiroForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Previne o envio padrão do formulário
+        
+        //Evento de refresh na tabela, a inserir ou excluir um item.
+        document.addEventListener('DOMContentLoaded', fetchData);
 
-            // Obtém os valores dos campos
-            var descricao = document.getElementById('descricao').value;
-            var origem = document.getElementById('origem').value;
-            var valorEntrada = document.getElementById('valorEntrada').value;
-            var valorSaida = document.getElementById('valorSaida').value;
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/faturamento');
+                const data = await response.json();
 
-            // Calcula o total geral
-            var totalGeral = parseFloat(valorEntrada) - parseFloat(valorSaida);
+                const tableBody = document.querySelector('#financeiroTable tbody');
+                tableBody.innerHTML = '';
 
-            // Gera um ID único (para simular, pode ser trocado por uma lógica mais apropriada)
-            var id = Date.now();
+                data.forEach((item) => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = item.idFaturamento;
+                    row.insertCell(1).textContent = item.descricao;
+                    row.insertCell(2).textContent = item.origem;
+                    row.insertCell(3).textContent = item.valorEntrada;
+                    row.insertCell(4).textContent = item.valorSaida;
+                    row.insertCell(5).textContent = item.totalGeral;
 
-            // Cria uma nova linha na tabela
-            var table = document.getElementById('financeiroTable').getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-            var cell5 = newRow.insertCell(4);
-            var cell6 = newRow.insertCell(5);
+                    const actionsCell = row.insertCell(6);
+                    actionsCell.innerHTML = `<button onclick="excluirItem(${item.idFaturamento})">Excluir</button>`;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados da API:', error);
+            }
+        }
+        
+        //Evento de criar ou inserir um item
+        async function criarItem() {
+            const descricao = document.getElementById('descricao').value;
+            const origem = document.getElementById('origem').value;
+            const valorEntrada = document.getElementById('valorEntrada').value;
+            const valorSaida = document.getElementById('valorSaida').value;
+            const totalGeral = document.getElementById('totalGeral').value;
 
-            // Define os valores das células
-            cell1.innerHTML = id;
-            cell2.innerHTML = descricao;
-            cell3.innerHTML = origem;
-            cell4.innerHTML = valorEntrada;
-            cell5.innerHTML = valorSaida;
-            cell6.innerHTML = totalGeral;
+            try {
+                const response = await fetch('http://localhost:3000/faturamento', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ descricao, origem, valorEntrada, valorSaida, totalGeral }),
+                });
 
-            // Limpa os campos do formulário
+                if (response.ok) {
+                    fetchData();
+                    // Limpar campos do formulário após criar o item
+                    document.getElementById('descricao').value = '';
+                    document.getElementById('origem').value = '';
+                    document.getElementById('valorEntrada').value = '';
+                    document.getElementById('valorSaida').value = '';
+                    document.getElementById('totalGeral').value = '';
+                } else {
+                    console.error('Erro ao criar item:', response.statusText);
+                    alert('Erro ao criar item. Verifique o console para mais detalhes.');
+                }
+            } catch (error) {
+                console.error('Erro ao criar item:', error.message);
+                alert('Erro ao criar item. Verifique o console para mais detalhes.');
+            }
+        }
+
+        //Evento de excluir o item
+        async function excluirItem(id) {
+            if (confirm('Deseja realmente excluir esta transação?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/faturamento/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        fetchData(); // Recarrega os dados após a exclusão
+                    } else {
+                        console.error('Erro ao excluir transação:', response.statusText);
+                        alert('Erro ao excluir transação. Verifique o console para mais detalhes.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir transação:', error.message);
+                    alert('Erro ao excluir transação. Verifique o console para mais detalhes.');
+                }
+            }
+        }
+
+        // Limpar campos do formulário
+        function limparFormulario() {
             document.getElementById('descricao').value = '';
-            document.getElementById('origem').value = 'Receita';
+            document.getElementById('origem').value = '';
             document.getElementById('valorEntrada').value = '';
             document.getElementById('valorSaida').value = '';
             document.getElementById('totalGeral').value = '';
-        });
+        }
 
-        document.getElementById('searchButton').addEventListener('click', function () {
-            var searchTerm = document.getElementById('search').value.toLowerCase();
+        //Evento de pesquisar
+        document.getElementById('search').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#financeiroTable tbody tr');
 
-            var table = document.getElementById('financeiroTable').getElementsByTagName('tbody')[0];
+            tableRows.forEach((row) => {
+                const descricaoCell = row.querySelector('td:nth-child(2)');
+                const descricaoText = descricaoCell.textContent.toLowerCase();
 
-            for (var i = 0, row; row = table.rows[i]; i++) {
-                var found = false;
-
-                for (var j = 0, cell; cell = row.cells[j]; j++) {
-                    var textContent = cell.textContent.toLowerCase();
-                    if (textContent.includes(searchTerm)) {
-                        found = true;
-                        break;
-                    }
+                if (descricaoText.includes(searchTerm)) {
+                    row.style.display = ''; // Exibe a linha se a descrição contiver o termo de pesquisa
+                } else {
+                    row.style.display = 'none'; // Oculta a linha se a descrição não contiver o termo de pesquisa
                 }
-
-                row.style.display = found ? '' : 'none';
-            }
+            });
         });
 
         // Voltar a página menu //
