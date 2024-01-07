@@ -147,17 +147,17 @@
             <input type="tel" id="telefone" name="telefone" required><br>
 
             <label for="dataAssociacao">Data de Associação:</label>
-            <input type="text" id="dataAssociacao" name="dataAssociacao" required>
+            <input type="date" id="dataAssociacao" name="dataAssociacao" required>
 
 
-            <input type="submit" value="Adicionar Associado">
+            <button id="btnAdicionar" type="button" onclick="criarItem()">Adicionar associado</button>
         </form>
 
         <!-- Barra de pesquisa -->
         <div id="searchContainer">
-            <label for="search">Pesquisar:</label>
+            <label for="search">Pesquisar associado (a):</label>
+            <label>&nbsp;&nbsp;</label>
             <input type="text" id="search" name="search">
-            <button id="searchButton">Buscar</button>
         </div>
         <br />
 
@@ -166,12 +166,12 @@
             <table id="associadoTable">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Nome Completo</th>
                         <th>Endereço</th>
                         <th>E-mail</th>
                         <th>Telefone</th>
                         <th>Data de Associação</th>
-                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -185,103 +185,115 @@
     </div>
 
     <script>
-        document.getElementById('associadoForm').addEventListener('submit', function (event) {
-            event.preventDefault();
+        //Evento de refresh na tabela, a inserir ou excluir um item.
+        document.addEventListener('DOMContentLoaded', fetchData);
 
-            var nome = document.getElementById('nome').value;
-            var endereco = document.getElementById('endereco').value;
-            var email = document.getElementById('email').value;
-            var telefone = document.getElementById('telefone').value;
-            var dataAssociacaoInput = document.getElementById('dataAssociacao');
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/associados');
+                const data = await response.json();
 
-            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
+                const tableBody = document.querySelector('#associadoTable tbody');
+                tableBody.innerHTML = '';
 
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-            var cell5 = newRow.insertCell(4);
+                data.forEach((item) => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = item.idAssociados;
+                    row.insertCell(1).textContent = item.nome;
+                    row.insertCell(2).textContent = item.endereco;
+                    row.insertCell(3).textContent = item.email;
+                    row.insertCell(4).textContent = item.telefone;
+                    row.insertCell(5).textContent = item.dataAssociacao;
 
-            cell1.innerHTML = nome;
-            cell2.innerHTML = endereco;
-            cell3.innerHTML = email;
-            cell4.innerHTML = telefone;
-
-            // Obtém a data de hoje se o campo "Data de Associação" estiver vazio
-            var dataAssociacao = dataAssociacaoInput.value.trim();
-            if (dataAssociacao === "") {
-                var data = new Date();
-                dataAssociacao = data.toLocaleDateString('pt-BR');
+                    const actionsCell = row.insertCell(6);
+                    actionsCell.innerHTML = `<button onclick="excluirItem(${item.idAssociados})">Excluir</button>`;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar dados da API:', error);
             }
+        }
 
-            // Preenche a data de associação com o valor apropriado
-            cell5.innerHTML = dataAssociacao;
+        //Evento de criar ou inserir um item
+        async function criarItem() {
+            const nome = document.getElementById('nome').value;
+            const endereco = document.getElementById('endereco').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
+            const dataAssociacao = document.getElementById('dataAssociacao').value;
 
-            // Limpa os campos do formulário após a adição do associado
-            document.getElementById('associadoForm').reset();
-        });
+            try {
+                const response = await fetch('http://localhost:3000/associados', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nome, endereco, email, telefone, dataAssociacao }),
+                });
 
-        document.getElementById('searchButton').addEventListener('click', function () {
-            var searchTerm = document.getElementById('search').value.toLowerCase();
-
-            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
-
-            for (var i = 0, row; row = table.rows[i]; i++) {
-                var found = false;
-
-                for (var j = 0, cell; cell = row.cells[j]; j++) {
-                    var textContent = cell.textContent.toLowerCase();
-                    if (textContent.includes(searchTerm)) {
-                        found = true;
-                        break;
-                    }
+                if (response.ok) {
+                    fetchData();
+                    // Limpar campos do formulário após criar o item
+                    document.getElementById('nome').value = '';
+                    document.getElementById('endereco').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('telefone').value = '';
+                    document.getElementById('dataAssociacao').value = '';
+                } else {
+                    console.error('Erro ao criar item:', response.statusText);
+                    alert('Erro ao criar item. Verifique o console para mais detalhes.');
                 }
-
-                row.style.display = found ? '' : 'none';
+            } catch (error) {
+                console.error('Erro ao criar item:', error.message);
+                alert('Erro ao criar item. Verifique o console para mais detalhes.');
             }
+        }
+
+        //Evento de excluir o item
+        async function excluirItem(id) {
+            if (confirm('Deseja realmente excluir este associado?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/associados/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        fetchData(); // Recarrega os dados após a exclusão
+                    } else {
+                        console.error('Erro ao excluir item:', response.statusText);
+                        alert('Erro ao excluir item. Verifique o console para mais detalhes.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir item:', error.message);
+                    alert('Erro ao excluir item. Verifique o console para mais detalhes.');
+                }
+            }
+        }
+
+        // Limpar campos do formulário
+        function limparFormulario() {
+            document.getElementById('nome').value = '';
+            document.getElementById('endereco').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('telefone').value = '';
+            document.getElementById('dataAssociacao').value = '';
+        }
+
+        //Evento de pesquisar
+        document.getElementById('search').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#associadoTable tbody tr');
+
+            tableRows.forEach((row) => {
+                const nomeCell = row.querySelector('td:nth-child(2)');
+                const nomeText = nomeCell.textContent.toLowerCase();
+
+                if (nomeText.includes(searchTerm)) {
+                    row.style.display = ''; // Exibe a linha se a descrição contiver o termo de pesquisa
+                } else {
+                    row.style.display = 'none'; // Oculta a linha se a descrição não contiver o termo de pesquisa
+                }
+            });
         });
-        // Função para adicionar uma nova linha na tabela com o botão Excluir
-        function adicionarLinha(nome, endereco, email, telefone, dataFormatada) {
-            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-            var cell5 = newRow.insertCell(4);
-            var cell6 = newRow.insertCell(5);
-
-            cell1.innerHTML = nome;
-            cell2.innerHTML = endereco;
-            cell3.innerHTML = email;
-            cell4.innerHTML = telefone;
-            cell5.innerHTML = dataFormatada;
-
-            // Adiciona o botão Excluir
-            var btnExcluir = document.createElement('button');
-            btnExcluir.innerHTML = 'Excluir';
-            btnExcluir.onclick = function () {
-                // Chama a função de exclusão passando a linha atual
-                excluirLinha(newRow);
-            };
-
-            // Adiciona o botão Excluir à célula
-            cell6.appendChild(btnExcluir);
-        }
-
-
-        // Função para excluir a linha
-        function excluirLinha(row) {
-            var index = row.rowIndex;
-            var table = document.getElementById('associadoTable').getElementsByTagName('tbody')[0];
-            table.deleteRow(index);
-        }
-
-        // Exemplo de chamada da função para adicionar linhas (você pode remover ou modificar conforme necessário)
-        adicionarLinha('João', 'Rua A', 'joao@email.com', '123456789', '01/01/2023');
-        adicionarLinha('Maria', 'Rua B', 'maria@email.com', '987654321', '02/01/2023');
 
         // Voltar a página menu //
         document.getElementById('botaoImagem').onclick = function () {

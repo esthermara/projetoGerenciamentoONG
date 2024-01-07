@@ -79,41 +79,41 @@ app.delete('/estoque/:id', (req, res) => {
 //API PARA A TABELA ASSOCIADOS *****************************************************
 
 //Rota que popula a tabela associadoTable
-app.get('/associados', (req, res) => {
+app.get('/associados', (reqAssociados, resAssociados) => {
   const query = 'SELECT * FROM Associados';
 
-  db.query(query, (err, results) => {
+  db.query(query, (err, resultsAssociados) => {
     if (err) {
       console.error('Erro ao executar a consulta:', err);
-      res.status(500).send('Erro interno no servidor');
+      resAssociados.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Dados dos associados enviados com sucesso!', results);
-      res.json(results);
+      console.log('Dados dos associados enviados com sucesso!', resultsAssociados);
+      resAssociados.json(resultsAssociados);
     }
   });
 });
 
 // Rota para criar um novo item no associados
-app.post('/associados', (req, res) => {
-  const { nome, endereco, email, telefone, dataAssociacao } = req.body;
+app.post('/associados', (reqAssociados, resAssociados) => {
+  const { nome, endereco, email, telefone, dataAssociacao } = reqAssociados.body;
 
-  const query = 'INSERT INTO Associados (nome, endereco, email, telefone, dataAssociacao) VALUES (?, ?, ?, ?)';
+  const query = 'INSERT INTO Associados (nome, endereco, email, telefone, dataAssociacao) VALUES (?, ?, ?, ?, ?)';
   const values = [nome, endereco, email, telefone, dataAssociacao];
 
-  db.query(query, values, (err, results) => {
+  db.query(query, values, (err, resultsAssociados) => {
     if (err) {
       console.error('Erro ao inserir no banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resAssociados.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Novo associado adicionado!', results.insertId);
-      res.json({ id: results.insertId });
+      console.log('Novo associado adicionado!', resultsAssociados.insertId);
+      resAssociados.json({ id: resultsAssociados.insertId });
     }
   });
 });
 
 // Rota para excluir um item do associados
-app.delete('/associados/:id', (req, res) => {
-  const { id } = req.params;
+app.delete('/associados/:id', (reqAssociados, resAssociados) => {
+  const { id } = reqAssociados.params;
 
   const query = 'DELETE FROM Associados WHERE idAssociados=?';
   const values = [id];
@@ -121,10 +121,10 @@ app.delete('/associados/:id', (req, res) => {
   db.query(query, values, (err) => {
     if (err) {
       console.error('Erro ao excluir do banco de dados:', err);
-      res.status(500).send('Erro interno no servidor');
+      resAssociados.status(500).send('Erro interno no servidor');
     } else {
       console.log('Excluído dos associados!', id);
-      res.json({ success: true });
+      resAssociados.json({ success: true });
     }
   });
 });
