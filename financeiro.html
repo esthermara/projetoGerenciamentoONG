@@ -126,6 +126,30 @@
             height: 50px;
             border-radius: 50%;
         }
+        #btnAdicionar {
+            padding: 8px 16px;
+            background-color: #262626;
+            color: rgb(132, 221, 137);
+            border: none;
+            cursor: pointer; 
+        }
+        #btnAdicionar:hover {
+            background-color: white;
+            color: rgb(132, 221, 137);
+            border: 1px solid #262626;  
+        }
+        #btnExcluir {
+            padding: 8px 16px;
+            background-color: #262626;
+            color: rgb(132, 221, 137);
+            border: none;
+            cursor: pointer; 
+        }
+        #btnExcluir:hover {
+            background-color: white;
+            color: rgb(132, 221, 137);
+            border: 1px solid #262626;   
+        }
     </style>
 </head>
 
@@ -211,7 +235,7 @@
                     row.insertCell(5).textContent = item.totalGeral;
 
                     const actionsCell = row.insertCell(6);
-                    actionsCell.innerHTML = `<button onclick="excluirItem(${item.idFaturamento})">Excluir</button>`;
+                    actionsCell.innerHTML = `<button id="btnExcluir" onclick="excluirItem(${item.idFaturamento})">Excluir</button>`;
                 });
             } catch (error) {
                 console.error('Erro ao buscar dados da API:', error);
