@@ -204,7 +204,7 @@ app.post('/faturamento', (reqFinanceiro, resFinanceiro) => {
   const { descricao, origem, valorEntrada, valorSaida, totalGeral } = reqFinanceiro.body;
 
   const query = 'INSERT INTO Faturamento (descricao, origem, valorEntrada, valorSaida, totalGeral) VALUES (?, ?, ?, ?, ?)';
-  const values = [descricao, origem, valorEntrada, valorSaida, totalGeral];
+  const values = [descricao, origem, parseFloat(valorEntrada), parseFloat(valorSaida), parseFloat(totalGeral)];
 
   db.query(query, values, (err, resultsFinanceiro) => {
     if (err) {

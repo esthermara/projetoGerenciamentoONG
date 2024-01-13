@@ -17,7 +17,7 @@
             margin: 0 auto;
             padding: 50px 50px 50px 50px;
             border: 2px solid #262626;
-            background-color: #4d4b4bee ;
+            background-color: #4d4b4bee;
             border-radius: 20px;
             color: white;
             font-weight: bold;
@@ -126,29 +126,33 @@
             height: 50px;
             border-radius: 50%;
         }
+
         #btnAdicionar {
             padding: 8px 16px;
             background-color: #262626;
             color: rgb(132, 221, 137);
             border: none;
-            cursor: pointer; 
+            cursor: pointer;
         }
+
         #btnAdicionar:hover {
             background-color: white;
             color: rgb(132, 221, 137);
-            border: 1px solid #262626;  
+            border: 1px solid #262626;
         }
+
         #btnExcluir {
             padding: 8px 16px;
             background-color: #262626;
             color: rgb(132, 221, 137);
             border: none;
-            cursor: pointer; 
+            cursor: pointer;
         }
+
         #btnExcluir:hover {
             background-color: white;
             color: rgb(132, 221, 137);
-            border: 1px solid #262626;   
+            border: 1px solid #262626;
         }
     </style>
 </head>
@@ -176,7 +180,7 @@
             <input type="number" step=".01" id="valorSaida" name="valorSaida" required><br />
 
             <label for="totalGeral">Total Geral:</label>
-            <input type="number" step=".01" id="totalGeral" name="valorSaida" required><br />
+            <input type="number" step=".01" id="totalGeral" name="valorSaida" required readonly><br />
 
             <button id="btnAdicionar" type="button" onclick="criarItem()">Registrar transação</button>
         </form>
@@ -213,7 +217,7 @@
     </div>
 
     <script>
-        
+
         //Evento de refresh na tabela, a inserir ou excluir um item.
         document.addEventListener('DOMContentLoaded', fetchData);
 
@@ -230,9 +234,9 @@
                     row.insertCell(0).textContent = item.idFaturamento;
                     row.insertCell(1).textContent = item.descricao;
                     row.insertCell(2).textContent = item.origem;
-                    row.insertCell(3).textContent = item.valorEntrada;
-                    row.insertCell(4).textContent = item.valorSaida;
-                    row.insertCell(5).textContent = item.totalGeral;
+                    row.insertCell(3).textContent = parseFloat(item.valorEntrada).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    row.insertCell(4).textContent = parseFloat(item.valorSaida).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    row.insertCell(5).textContent = parseFloat(item.totalGeral).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
                     const actionsCell = row.insertCell(6);
                     actionsCell.innerHTML = `<button id="btnExcluir" onclick="excluirItem(${item.idFaturamento})">Excluir</button>`;
@@ -241,14 +245,14 @@
                 console.error('Erro ao buscar dados da API:', error);
             }
         }
-        
+
         //Evento de criar ou inserir um item
         async function criarItem() {
             const descricao = document.getElementById('descricao').value;
             const origem = document.getElementById('origem').value;
-            const valorEntrada = document.getElementById('valorEntrada').value;
-            const valorSaida = document.getElementById('valorSaida').value;
-            const totalGeral = document.getElementById('totalGeral').value;
+            const valorEntrada = parseFloat(document.getElementById('valorEntrada').value) || 0;
+            const valorSaida = parseFloat(document.getElementById('valorSaida').value) || 0;
+            const totalGeral = parseFloat(document.getElementById('totalGeral').value) || 0;
 
             try {
                 const response = await fetch('http://localhost:3000/faturamento', {
@@ -272,6 +276,7 @@
                 alert('Erro ao criar item. Verifique o console para mais detalhes.');
             }
         }
+
 
         //Evento de excluir o item
         async function excluirItem(id) {
@@ -319,6 +324,15 @@
                 }
             });
         });
+
+        document.getElementById('valorSaida').addEventListener('input', atualizarTotalGeral);
+
+        function atualizarTotalGeral() {
+            const valorEntrada = parseFloat(document.getElementById('valorEntrada').value) || 0;
+            const valorSaida = parseFloat(document.getElementById('valorSaida').value) || 0;
+            const totalGeral = valorEntrada - valorSaida;
+            document.getElementById('totalGeral').value = totalGeral.toFixed(2);
+        }
 
         // Voltar a página menu //
         document.getElementById('botaoImagem').onclick = function () {
