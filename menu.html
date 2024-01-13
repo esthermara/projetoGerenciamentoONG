@@ -152,7 +152,7 @@
 
 <body>
     <div id="botaoImagemContainer">
-        <label id="selectedOptionLabel" style="color: white; font-size: x-large; vertical-align: top;"></label>
+        <label id="selectedOptionLabel" style="color: white; font-size: large; vertical-align: bottom;"></label>
         <button id="botaoImagem">
             <img src="image/imagemLogin.png" alt="Botão de Imagem">
         </button>
@@ -180,10 +180,6 @@
             </div>
         </footer>
         <script>
-            //traz a competência da página inicial index.html
-            //const selectedOption = localStorage.getItem('selectedOption');
-            //document.getElementById('selectedOptionLabel').textContent = 'Seja bem-vindo ' + selectedOption + '!  ';
-
             //desabilita o estoque e o financeiro no menu, para colaborador (a)
             document.addEventListener('DOMContentLoaded', function () {
                 const selectedOption = localStorage.getItem('selectedOption');
