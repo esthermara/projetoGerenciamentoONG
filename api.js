@@ -246,7 +246,7 @@ app.get('/usuario', (reqUsuario, resUsuario) => {
       console.error('Erro ao executar a consulta:', err);
       resUsuario.status(500).send('Erro interno no servidor');
     } else {
-      console.log('Dados do faturamento enviados com sucesso!', resultsUsuario);
+      console.log('Dados do usuário enviados com sucesso!', resultsUsuario);
       resUsuario.json(resultsUsuario);
     }
   });

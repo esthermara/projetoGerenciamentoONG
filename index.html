@@ -104,8 +104,8 @@
                     <label for="competenciaLogin">Competência</label>
                     <select id="competenciaLogin" name="competenciaLogin" required>
                         <option value="Escolher"></option>
-                        <option value="administrador">Administrador</option>
-                        <option value="colaborador">Colaborador</option>
+                        <option value="administrador (a)">Administrador (a)</option>
+                        <option value="colaborador (a)">Colaborador (a)</option>
                     </select>
                 </div>
                 <button id="btnLogar" type="submit" onclick="loginUser()">Entrar</button>
@@ -130,8 +130,8 @@
                     <label for="competenciaCadastro">Competência</label>
                     <select id="competencia" name="competenciaCadastro" required>
                         <option value="Escolher"></option>
-                        <option value="administrador">Administrador</option>
-                        <option value="colaborador">Colaborador</option>
+                        <option value="administrador (a)">Administrador (a)</option>
+                        <option value="colaborador (a)">Colaborador (a)</option>
                     </select>
                 </div>
                 <button id="btnAdicionar" type="button" onclick="criarItem()">Cadastrar</button>
@@ -183,8 +183,9 @@
                     });
 
                     if (responseLogin.ok) {
-                        limparFormularioLogin();
+                        redirectMenu();
                         window.location.href = 'menu.html'; // Redireciona para a página de menu em caso de sucesso.
+                        limparFormularioLogin();
                     } else {
                         limparFormularioLogin();
                         const errorData = await responseLogin.json();
@@ -226,11 +227,17 @@
             }
         }
 
+        //Carrega a informação do value no select para a página menu.html
+        function redirectMenu() {
+            const selectedOption = document.getElementById('competenciaLogin').value;
+            localStorage.setItem('selectedOption', selectedOption);
+            window.location.href = 'menu.html';
+        }
+
         // Limpar campos do formulário
         function limparFormularioLogin() {
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            document.getElementById('competenciaLogin').value = '';
         }
 
         // Limpar campos do formulário

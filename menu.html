@@ -152,6 +152,7 @@
 
 <body>
     <div id="botaoImagemContainer">
+        <label id="selectedOptionLabel" style="color: white; font-size: x-large; vertical-align: top;"></label>
         <button id="botaoImagem">
             <img src="image/imagemLogin.png" alt="Botão de Imagem">
         </button>
@@ -165,8 +166,8 @@
             <ul class="list-unstyled components">
                 <li><a href="associados.html"><i class="fas fa-users"></i> ASSOCIADOS</a></li>
                 <li><a href="oficinas.html"><i class="fas fa-tools"></i> OFICINAS</a></li>
-                <li><a href="estoque.html"><i class="fas fa-box"></i> ESTOQUE</a></li>
-                <li><a href="financeiro.html"><i class="fas fa-chart-bar"></i> FINANCEIRO</a></li>
+                <li id="estoqueLi"><a href="estoque.html"><i class="fas fa-box"></i> ESTOQUE</a></li>
+                <li id="financeiroLi"><a href="financeiro.html"><i class="fas fa-chart-bar"></i> FINANCEIRO</a></li>
             </ul>
         </nav>
         <div id="ImagemprincipalContainer">
@@ -179,6 +180,22 @@
             </div>
         </footer>
         <script>
+            //traz a competência da página inicial index.html
+            //const selectedOption = localStorage.getItem('selectedOption');
+            //document.getElementById('selectedOptionLabel').textContent = 'Seja bem-vindo ' + selectedOption + '!  ';
+
+            //desabilita o estoque e o financeiro no menu, para colaborador (a)
+            document.addEventListener('DOMContentLoaded', function () {
+                const selectedOption = localStorage.getItem('selectedOption');
+                document.getElementById('selectedOptionLabel').textContent = 'Seja bem-vindo ' + selectedOption + '!  ';
+
+                if (selectedOption.toLowerCase() === 'colaborador (a)') {
+                    // Desabilitar as tags <li> correspondentes ao estoque e financeiro
+                    document.getElementById('estoqueLi').style.display = 'none';
+                    document.getElementById('financeiroLi').style.display = 'none';
+                }
+            });
+
             // Voltar a página menu //
             document.getElementById('botaoImagem').onclick = function () {
                 window.location.href = 'index.html';
