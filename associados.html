@@ -227,7 +227,12 @@
                     row.insertCell(2).textContent = item.endereco;
                     row.insertCell(3).textContent = item.email;
                     row.insertCell(4).textContent = item.telefone;
-                    row.insertCell(5).textContent = item.dataAssociacao;
+                    
+                    // Formatar a data (item.dataAssociacao) para dd/MM/aaaa
+                    const dataAssociacao = new Date(item.dataAssociacao);
+                    const formattedData = `${dataAssociacao.getDate().toString().padStart(2, '0')}/${(dataAssociacao.getMonth() + 1).toString().padStart(2, '0')}/${dataAssociacao.getFullYear()}`;
+
+                    row.insertCell(5).textContent = formattedData;
 
                     const actionsCell = row.insertCell(6);
                     actionsCell.innerHTML = `<button id="btnExcluir" onclick="excluirItem(${item.idAssociados})">Excluir</button>`;
