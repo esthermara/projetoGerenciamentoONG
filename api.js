@@ -288,6 +288,27 @@ app.delete('/usuario/:id', (reqUsuario, resUsuario) => {
   });
 });
 
+// Rota para autenticar usuário
+app.post('/login', (reqLogin, resLogin) => {
+  const { nome, senha, competencia } = reqLogin.body;
+
+  const query = 'SELECT * FROM Usuario WHERE nome = ? AND senha = ? AND competencia = ?';
+  const values = [nome, senha, competencia];
+
+  db.query(query, values, (err, resultsLogin) => {
+      if (err) {
+          console.error('Erro ao executar a consulta:', err);
+          resLogin.status(500).send('Erro interno no servidor');
+      } else {
+          if (resultsLogin.length > 0) {
+              resLogin.json({ success: true });
+          } else {
+              resLogin.status(401).json({ message: 'Credenciais incorretas. Tente novamente.' });
+          }
+      }
+  });
+});
+
 //*********************************************************************************
 
 

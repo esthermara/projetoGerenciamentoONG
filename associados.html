@@ -257,11 +257,7 @@
                 if (response.ok) {
                     fetchData();
                     // Limpar campos do formulário após criar o item
-                    document.getElementById('nome').value = '';
-                    document.getElementById('endereco').value = '';
-                    document.getElementById('email').value = '';
-                    document.getElementById('telefone').value = '';
-                    document.getElementById('dataAssociacao').value = '';
+                    limparFormulario();
                 } else {
                     console.error('Erro ao criar item:', response.statusText);
                     alert('Erro ao criar item. Verifique o console para mais detalhes.');

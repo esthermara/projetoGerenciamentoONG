@@ -60,7 +60,8 @@
             font-size: 18px;
         }
 
-        input, select {
+        input,
+        select {
             width: calc(100% - 16px);
             padding: 10px;
             border: 1px solid #ccc;
@@ -107,7 +108,7 @@
                         <option value="colaborador">Colaborador</option>
                     </select>
                 </div>
-                <button type="submit">Entrar</button>
+                <button id="btnLogar" type="submit" onclick="loginUser()">Entrar</button>
                 <p>Não tem uma conta? <a href="#" id="showSignup">Cadastre-se</a></p>
             </form>
         </div>
@@ -122,7 +123,8 @@
                 </div>
                 <div class="form-group">
                     <label for="novaSenha">Nova Senha</label>
-                    <input type="text" id="senha" name="novaSenha" required title="Senha do tipo alfanumérica, com no máximo 15 caracteres.">
+                    <input type="text" id="senha" name="novaSenha" required
+                        title="Senha do tipo alfanumérica, com no máximo 15 caracteres.">
                 </div>
                 <div class="form-group">
                     <label for="competenciaCadastro">Competência</label>
@@ -162,9 +164,39 @@
 
         document.getElementById('login').addEventListener('submit', function (event) {
             event.preventDefault();
-            console.log('Formulário de login enviado.');
-            // Aqui você pode adicionar a lógica de login.
+            loginUser();
         });
+
+        async function loginUser() {
+            const nome = document.getElementById('username').value;
+            const senha = document.getElementById('password').value;
+            const competencia = document.getElementById('competenciaLogin').value;
+
+            try {
+                if (nome != '' || senha != '' || competencia != 'Escolher') {
+                    const responseLogin = await fetch('http://localhost:3000/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ nome, senha, competencia }),
+                    });
+
+                    if (responseLogin.ok) {
+                        limparFormularioLogin();
+                        window.location.href = 'menu.html'; // Redireciona para a página de menu em caso de sucesso.
+                    } else {
+                        limparFormularioLogin();
+                        const errorData = await responseLogin.json();
+                        document.getElementById('errorMessage').innerText = errorData.message;
+                    }
+                }
+            } catch (error) {
+                limparFormularioLogin();
+                console.error('Erro ao realizar login:', error.message);
+                alert('Erro ao realizar login.');
+            }
+        }
 
         //Evento de criar ou inserir um item
         async function criarItem() {
@@ -183,9 +215,7 @@
 
                 if (response.ok) {
                     // Limpar campos do formulário após criar o item
-                    document.getElementById('nome').value = '';
-                    document.getElementById('senha').value = '';
-                    document.getElementById('competencia').value = '';
+                    limparFormularioCadastro();
                 } else {
                     console.error('Erro ao criar item:', response.statusText);
                     alert('Erro ao criar item. Verifique o console para mais detalhes.');
@@ -197,7 +227,14 @@
         }
 
         // Limpar campos do formulário
-        function limparFormulario() {
+        function limparFormularioLogin() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('competenciaLogin').value = '';
+        }
+
+        // Limpar campos do formulário
+        function limparFormularioCadastro() {
             document.getElementById('nome').value = '';
             document.getElementById('senha').value = '';
             document.getElementById('competencia').value = '';
